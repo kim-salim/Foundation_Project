@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+
+# auto calibration history from practice.py
+data/calib/history/
+
+# local model weights (too large for regular GitHub push)
+weights/*.onnx
+weights/*.pt
