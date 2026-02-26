@@ -18,25 +18,22 @@ def ports():
     pri = [p for p in plist if ("CH340" in (p.description or "") or "USB-SERIAL" in (p.description or ""))]
     return pri or plist
 
-def pick_port_by_menu():
-    ps = ports()
-    print("\n[감지된 포트]")
-    for i, p in enumerate(ps, 1):
+def pick_port_by_index():
+    print("\n 감지된 포트")
+    ps= ports()
+    for i,p in enumerate(ps,1):
         print(f"  {i}) {p.device}  |  {p.description}")
 
     s = input("\n어느 로봇을 제어할까요? (예: 1 or 2, 빈칸=자동) = ").strip()
-    if s == "":
+    if s=="":
         return None
-
     try:
-        idx = int(s)
-        if not (1 <= idx <= len(ps)):
-            raise ValueError
+        idx=int(s)
     except:
-        print("✗ 잘못된 번호입니다. → 자동 모드로 진행")
+        print("✗ 숫자(1,2,...)로 입력해주세요. → 자동 모드로 진행")
         return None
 
-    return ps[idx - 1].device   # ✅ 목록에서 고른 그 포트 그대로
+    return f"/dev/ttyUSB{idx - 1}"
 
 def open_try(port, baud):
     try:
@@ -172,24 +169,22 @@ def read_axis(name):
     return None if s == "" else float(s)
 
 if __name__ == "__main__":
-    selected_port = pick_port_by_menu()
-    print("[선택]", selected_port if selected_port else "자동")
+    selected_port = pick_port_by_index()
+    if selected_port:
+        print(f"선택된 포트를 제어합니다.")
+    else:
+        print("\n[자동] 감지된 포트 중 먼저 성공하는 장치를 제어합니다.\n")
 
-    # 1) 선택한 포트로 초기화(1회)
+
+
     ok = try_connect_and_jog(selected_port=selected_port)
-    if not ok:
-        print("✗ 초기화 실패")
-        raise SystemExit(1)
-
-    # 2) 좌표 입력
-    print("\n[입력] x,y,z 좌표를 입력하세요 (mm, 공백 또는 줄바꿈 구분)")
-    try:
-        X = read_axis("X")
-        Y = read_axis("Y")
-        Z = read_axis("Z")
-    except Exception:
-        print("✗ 숫자로 입력해주세요.")
-        raise SystemExit(1)
-
-    # 3) 선택한 포트로 이동(반드시 selected_port 전달)
-    Control_Cartesian(X, Y, Z, selected_port=selected_port)
+    if  ok:
+        print("\n[입력] x,y,z 좌표를 입력하세요 (mm, 공백 또는 줄바꿈 구분)")
+        try:
+            X = read_axis("X")
+            Y = read_axis("Y")
+            Z = read_axis("Z")
+        except Exception:
+            print("✗ 숫자로 입력해주세요.")
+        else:
+            Control_Cartesian(X, Y, Z)

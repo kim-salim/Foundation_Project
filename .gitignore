@@ -8,3 +8,9 @@ data/calib/history/
 # local model weights (too large for regular GitHub push)
 weights/*.onnx
 weights/*.pt
+
+.idea/
+
+
+data/calib/*.npz
+
