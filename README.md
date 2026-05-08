@@ -33,3 +33,6 @@ All executable scripts are managed under `apps/`.
    - capture `1~9` -> solve `g` -> save `s`
 3. Pick-and-place runtime
    - `python apps/pick_and_place.py`
+
+
+<img width="5712" height="4284" alt="동아리 경진대회" src="https://github.com/user-attachments/assets/4c8d05b8-7735-4022-95c7-26b385967635" />
